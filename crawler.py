@@ -1,7 +1,13 @@
-from driver import Driver
-from bs4 import BeautifulSoup
 import math
-import time
+from driver import Driver
+
+def initialize(policy_numbers, html_list):
+    driver = Driver()
+    driver.get_url('https://www.youthcenter.go.kr')
+    driver.find_xpath_element('//*[@id="pc_gnb"]/ul/li[1]/a/span').click()
+    get_policy_detail(driver, policy_numbers, html_list)
+
+# 정책 번호 받아오기
 def get_policy_num(driver):
     # 청년정책 통합검색 사이트의 URL과, 주거/금융 유형 세부검색을 위한 XPath
     youthCenter = 'https://www.youthcenter.go.kr'
@@ -44,8 +50,10 @@ def get_policy_num(driver):
 
     return policy_numbers
 
-def get_policy_detail(driver, policy_numbers):
-    html_list = []
+# 정책 상세 내용 받아오기
+def get_policy_detail(driver, policy_numbers, html_list):
+    count = 0
+
     # 정책 번호를 이용하여 상세 페이지로 이동하는 자바스크립트
     # JS의 스코핑 룰 때문에 전역함수로 선언해주어야 함
     script = """
@@ -63,27 +71,12 @@ def get_policy_detail(driver, policy_numbers):
         driver.execute_script(script)
         driver.execute_script("f_Detail('{}')".format(policy_number))
         html_list.append(driver.get_html())
-    return html_list
+        policy_numbers.remove(policy_number)
+        count += 1
 
-def parse_html(html_list):
-    for html in html_list:
-        soup = BeautifulSoup(html, 'html.parser')
-
-if __name__ == "__main__":
-    # 초기화
-    driver = Driver()
-    print("크롤링 시작")
-
-    # 정책 번호 받아오기
-    policy_numbers = get_policy_num(driver)
-
-    # 정책 번호에 해당하는 html 받아오기
-    html_list = get_policy_detail(driver, policy_numbers)
-
-    # 받아온 html을 파싱
-    parse_html(html_list)
-
-    # 종료
+        if count % 50 == 0:
+            driver.exit()
+            initialize(policy_numbers, html_list)
+    print(len(html_list))
     driver.exit()
-
-
+    return html_list

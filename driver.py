@@ -10,7 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 class Driver:
     # 초기화
     # 차단 방지를 위한 User-Agent 설정
-    # 브라우저 창이 안보이도록 설정
     # ChromeDriver를 사용자 버전에 맞추어 설치
     # 웹페이지 로딩을 암묵적으로 대기함
     def __init__(self):
@@ -18,7 +17,6 @@ class Driver:
         chrome_options.add_argument(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
         )
-        chrome_options.add_argument('headless')
         self.driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()),
                               options = chrome_options)
         self.driver.implicitly_wait(5)
@@ -68,4 +66,5 @@ class Driver:
 
     # Driver를 종료시킴
     def exit(self):
+        self.driver.delete_all_cookies()
         self.driver.close()
