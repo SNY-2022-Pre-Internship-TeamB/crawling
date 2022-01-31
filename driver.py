@@ -14,12 +14,12 @@ class Driver:
         )
         self.driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()),
                               options = chrome_options)
+        self.driver.implicitly_wait(5)
 
     def __call__(self):
         return self.driver
 
     def get_url(self, url):
-        self.driver.implicitly_wait(5)
         self.driver.get(url)
 
     def find_xpath_element(self, xpath):
