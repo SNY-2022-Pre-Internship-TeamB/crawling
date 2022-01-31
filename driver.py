@@ -27,3 +27,15 @@ class Driver:
             EC.presence_of_element_located((By.XPATH, xpath)),
             message = 'XPATH element not found'
         )
+
+    def find_css_selector_element(self, css_selector):
+        return WebDriverWait(self.driver, 5, poll_frequency = 1).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, css_selector)),
+            message = 'CSS_SELECTOR element not found'
+        )
+
+    def execute_onclick(self, link):
+        self.driver.execute_script("arguments[0].click();", link)
+
+    def wait(self, time):
+        self.driver.implicitly_wait(time)
