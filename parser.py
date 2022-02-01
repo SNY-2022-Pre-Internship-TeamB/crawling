@@ -7,7 +7,6 @@ def getText(soup_select):
 
 # 각 요소별로 추출
 def parse_html(html):
-    context_list = []
     text_list = []
     soup = BeautifulSoup(html, 'html.parser')
 
@@ -80,11 +79,11 @@ def parse_html(html):
     e7 = soup.select(
         '#content > div.ply-view-section.green > div.view-txt > div:nth-child(8) > ul > li:nth-child(7) > div.list_cont')
 
-    context_list.append(p1, p2, p3, s1, s2, s3, s4, s5, q1, q2, q3, q4, q5, q6, q7, q8,
-                        h1, h2, h3, h4, e1, e2, e3, e4, e5, e6, e7)
+    context_list = [p1, p2, p3, s1, s2, s3, s4, s5, q1, q2, q3, q4, q5, q6, q7, q8,
+                        h1, h2, h3, h4, e1, e2, e3, e4, e5, e6, e7]
 
-    for i in range(len(context_list)):
-        text = getText(context_list[i])
+    for context in context_list:
+        text = getText(context)
         text_list.append(text)
 
     return text_list

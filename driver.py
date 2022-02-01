@@ -17,6 +17,8 @@ class Driver:
         chrome_options.add_argument(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
         )
+        chrome_options.add_argument('headless')
+        chrome_options.add_argument("--window-size=1920x1080")
         self.driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()),
                               options = chrome_options)
         self.driver.implicitly_wait(5)

@@ -1,14 +1,11 @@
 import math
 from driver import Driver
 
-def initialize(policy_numbers, html_list):
-    driver = Driver()
-    driver.get_url('https://www.youthcenter.go.kr')
-    driver.find_xpath_element('//*[@id="pc_gnb"]/ul/li[1]/a/span').click()
-    get_policy_detail(driver, policy_numbers, html_list)
-
 # 정책 번호 받아오기
-def get_policy_num(driver):
+def get_policy_num():
+    # 초기화
+    driver = Driver()
+
     # 청년정책 통합검색 사이트의 URL과, 주거/금융 유형 세부검색을 위한 XPath
     youthCenter = 'https://www.youthcenter.go.kr'
     policy_housing_finance = ['//*[@id="pc_gnb"]/ul/li[1]/a/span',
@@ -47,12 +44,16 @@ def get_policy_num(driver):
         driver.execute_script("fn_move({})".format(count + 1))
 
     print("{}개 정책의 정책번호 저장 완료".format(len(policy_numbers)))
+    driver.exit()
 
     return policy_numbers
 
 # 정책 상세 내용 받아오기
-def get_policy_detail(driver, policy_numbers, html_list):
-    count = 0
+def get_policy_detail(policy_numbers, html_list):
+    # 초기화
+    driver = Driver()
+    driver.get_url('https://www.youthcenter.go.kr')
+    driver.find_xpath_element('//*[@id="pc_gnb"]/ul/li[1]/a/span').click()
 
     # 정책 번호를 이용하여 상세 페이지로 이동하는 자바스크립트
     # JS의 스코핑 룰 때문에 전역함수로 선언해주어야 함
@@ -71,12 +72,5 @@ def get_policy_detail(driver, policy_numbers, html_list):
         driver.execute_script(script)
         driver.execute_script("f_Detail('{}')".format(policy_number))
         html_list.append(driver.get_html())
-        policy_numbers.remove(policy_number)
-        count += 1
 
-        if count % 50 == 0:
-            driver.exit()
-            initialize(policy_numbers, html_list)
-    print(len(html_list))
     driver.exit()
-    return html_list
